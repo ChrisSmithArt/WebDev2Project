@@ -1,7 +1,7 @@
 <?php
 require('connect.php');
 
-     $query = "SELECT * FROM NPCs ORDER BY id";
+     $query = "SELECT * FROM NPCs ORDER BY ID";
      $statement = $db->prepare($query);
      $statement->execute(); 
 
@@ -23,7 +23,8 @@ require('connect.php');
             <?php while($row = $statement->fetch()):?>
                 <div class="characterCard">  
                     <h2>Name: <?=$row['Name']?></h2>
-                    <p>Description: <?=$row['Description']?></p>  
+                    <p>Description: <?=$row['Description']?></p> 
+                    <a href="edit.php?ID=<?=$row['ID']?>">Edit</a> 
                 </div>               
             <?php endwhile ?>
         </div>
