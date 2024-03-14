@@ -1,7 +1,7 @@
 <?php
 require('connect.php');
 
-     $query = "SELECT * FROM NPCs ORDER BY id DESC";
+     $query = "SELECT * FROM NPCs ORDER BY id";
      $statement = $db->prepare($query);
      $statement->execute(); 
 
@@ -17,8 +17,16 @@ require('connect.php');
     <title>Your NPC Database</title>
 </head>
 <body>
-    <!-- Remember that alternative syntax is good and html inside php is bad -->
+    <?php include("header.php");?>
     <main>
+        <div id="cardLibrary">
+            <?php while($row = $statement->fetch()):?>
+                <div class="characterCard">  
+                    <h2>Name: <?=$row['Name']?></h2>
+                    <p>Description: <?=$row['Description']?></p>  
+                </div>               
+            <?php endwhile ?>
+        </div>
     </main>
 </body>
 </html>

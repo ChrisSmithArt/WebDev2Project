@@ -3,4 +3,4 @@ This is a text document to test git for the WebDev2 Project.
 How to commit to git from this point.
 git add . 
 git commit -m "text description of commit"
-git push -u origin main.
+git push -u origin main
