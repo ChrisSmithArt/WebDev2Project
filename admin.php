@@ -1,6 +1,7 @@
 <?php
 require('connect.php');
 
+//AREAS
      $areaQuery = "SELECT * FROM areas ORDER BY ID";
      $areaStatement = $db->prepare($areaQuery);
      $areaStatement->execute(); 
@@ -29,7 +30,8 @@ require('connect.php');
                     $areaValid = false;
                 }
             }else if ($_POST['command'] == 'Delete'){
-                $areaID = filter_input(INPUT_GET, 'AreaID', FILTER_SANITIZE_NUMBER_INT);
+                // echo "<h2>ID: " . $_POST['AreaID']. "</h2>";
+                $areaID = filter_input(INPUT_POST, 'AreaID', FILTER_SANITIZE_NUMBER_INT);
                 $areaQuery = "DELETE FROM areas WHERE ID = :ID";
                 $areaStatement = $db->prepare($areaQuery);
                 $areaStatement->bindValue(':ID', $areaID, PDO::PARAM_INT);
@@ -37,33 +39,22 @@ require('connect.php');
                 header("Location: Admin.php");
         }
     }
+    $validArea = true;
+    if ($_POST && !empty($_POST['NewAreaName']) && !empty($_POST['NewAreaDescription']) && $_POST['command'] == 'Create') {
+        $nameArea = filter_input(INPUT_POST, 'NewAreaName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $descriptionArea = filter_input(INPUT_POST, 'NewAreaDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $queryArea = "INSERT INTO areas (Name, Description) VALUES (:Name, :Description)";        
+        $statementArea = $db->prepare($queryArea);
+        $statementArea->bindValue(':Name', $nameArea);
+        $statementArea->bindValue(':Description', $descriptionArea);
+        $statementArea->execute();
+        header("Location: Admin.php");
+        exit;
+    } else if($_POST && empty($_POST['NewAreaName']) && empty($_POST['NewAreaDescription']) && $_POST['command'] == 'Create') {
+        $validArea = false;
+    }
 
-
-
-
-    //  $regionQuery = "SELECT * FROM regions ORDER BY ID";
-    //  $regionStatement = $db->prepare($regionQuery);
-    //  $regionStatement->execute(); 
-
-    //  $locationQuery = "SELECT * FROM locations ORDER BY ID";
-    //  $locationStatement = $db->prepare($locationQuery);
-    //  $locationStatement->execute(); 
-
-     
-$validArea = true;
-if ($_POST && !empty($_POST['NewAreaName']) && !empty($_POST['NewAreaDescription']) && $_POST['command'] == 'Create') {
-    $nameArea = filter_input(INPUT_POST, 'NewAreaName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $descriptionArea = filter_input(INPUT_POST, 'NewAreaDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $queryArea = "INSERT INTO areas (Name, Description) VALUES (:Name, :Description)";        
-    $statementArea = $db->prepare($queryArea);
-    $statementArea->bindValue(':Name', $nameArea);
-    $statementArea->bindValue(':Description', $descriptionArea);
-    $statementArea->execute();
-    header("Location: Admin.php");
-    exit;
-} else if($_POST && empty($_POST['NewAreaName']) && empty($_POST['NewAreaDescription']) && $_POST['command'] == 'Create') {
-    $validArea = false;
-}
+//SPECIES
 
 
 ?>
@@ -80,8 +71,8 @@ if ($_POST && !empty($_POST['NewAreaName']) && !empty($_POST['NewAreaDescription
 <body>
     <?php include("header.php");?>
     <main>
-        <div id="areaContent">
-            <div>
+        <div id="categoryLibrary">
+            <div id="areaAdd">
                 <div id="invalidated">
                     <?php if(!$validArea):?>
                         You didn't enter any information!
@@ -104,7 +95,7 @@ if ($_POST && !empty($_POST['NewAreaName']) && !empty($_POST['NewAreaDescription
                     </fieldset>
                 </form>
             </div>
-            <div>
+            <div class="areaEdit">
                 <div>
                     <?php if(!$areaValid):?>
                             You didn't change any information!
@@ -112,27 +103,27 @@ if ($_POST && !empty($_POST['NewAreaName']) && !empty($_POST['NewAreaDescription
                     <?php if(!$areaStatement):?>
                         No query!
                     <?php endif ?>
-                    </div>
-                        <?php while($areaRow = $areaStatement->fetch()):?>
-                        <form method="post">
-                            <fieldset>
-                                <legend>Edit Area</legend>
-                                <div>
-                                    <label for="AreaName">Name</label>
-                                    <input type="text" name="AreaName" id="AreaName" value="<?=$areaRow['Name']?>">
-                                </div>
-                                <div>
-                                    <label for="AreaDescription">Description</label>
-                                    <textarea name="AreaDescription" id="AreaDescription"><?= $areaRow['Description'] ?></textarea>
-                                </div>
-                                <div>
-                                    <h3>Area ID: <?=$areaRow['ID']?></h3>
-                                    <input type="hidden" name="AreaID" if="AreaID" value="<?=$areaRow['ID']?>">
-                                    <input class="button" type="submit" name="command" value="Update">
-                                    <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Area?')">
-                                </div> 
-                            </fieldset>
-                        </form>          
+                </div>
+                <?php while($areaRow = $areaStatement->fetch()):?>
+                    <form method="post">
+                        <fieldset>
+                            <legend>Edit Area</legend>
+                            <div>
+                                <label for="AreaName">Name</label>
+                                <input type="text" name="AreaName" id="AreaName" value="<?=$areaRow['Name']?>">
+                            </div>
+                            <div>
+                                <label for="AreaDescription">Description</label>
+                                <textarea name="AreaDescription" id="AreaDescription"><?= $areaRow['Description'] ?></textarea>
+                            </div>
+                            <div>
+                                <h3>Area ID: <?=$areaRow['ID']?></h3>
+                                <input type="hidden" name="AreaID" if="AreaID" value="<?=$areaRow['ID']?>">
+                                <input class="button" type="submit" name="command" value="Update">
+                                <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Area?')">
+                            </div> 
+                        </fieldset>
+                    </form>          
                 <?php endwhile ?>
             </div>
         </div>
