@@ -10,11 +10,28 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
     $row = $statement->fetch();
 
     $species = $row['SpeciesID'];
+    $organization = $row['OrganizationID'];
+    $occupation = $row['OccupationID'];
+
 
     $querySpecies = "SELECT * FROM species WHERE ID = $species";
     $statementSpecies = $db->prepare($querySpecies);
     $statementSpecies->execute(); 
     $rowSpecies = $statementSpecies->fetch();
+
+    $queryOrganization = "SELECT * FROM organizations WHERE ID = $organization";
+    $statementOrganization = $db->prepare($queryOrganization);
+    $statementOrganization->execute(); 
+    $rowOrganization = $statementOrganization->fetch();
+
+
+    $queryOccupation = "SELECT * FROM occupations WHERE ID = $occupation";
+    $statementOccupation = $db->prepare($queryOccupation);
+    $statementOccupation->execute(); 
+    $rowOccupation = $statementOccupation->fetch();
+
+
+
 
 } else {
     header("Location: index.php");
@@ -40,6 +57,10 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
                 <h2>Name: <?= $row['Name']?></h2>
                 <div>Description: <?= $row['Description'] ?></div>
                 <div>Species: <?= $rowSpecies['Name'] ?></div>
+                <div>Occupation: <?= $rowOccupation['Name'] ?></div>
+                <?php if($organization): ?>
+                    <div>Organization: <?= $rowOrganization['Name'] ?></div>
+                <?php endif ?>
                 <a href="edit.php?ID=<?=$ID?>">edit</a>
             <?php else: ?>
                 <?php header("Location: index.php")?>

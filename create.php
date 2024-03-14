@@ -7,11 +7,15 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $SpeciesID = $_POST['species'];
-    $query = "INSERT INTO npcs (name, description, SpeciesID) VALUES (:name, :description, :SpeciesID)";        
+    $OccupationID = $_POST['occupation'];
+    $OrganizationID = $_POST['organization'];
+    $query = "INSERT INTO npcs (name, description, SpeciesID, OccupationID, OrganizationID) VALUES (:name, :description, :SpeciesID, :OccupationID, :OrganizationID)";        
     $statement = $db->prepare($query);
     $statement->bindValue(':name', $name);
     $statement->bindValue(':description', $description);
     $statement->bindValue(':SpeciesID', $SpeciesID);
+    $statement->bindValue(':OccupationID', $OccupationID);
+    $statement->bindValue(':OrganizationID', $OrganizationID);
     $statement->execute();
     header("Location: index.php");
     exit;
@@ -22,6 +26,14 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
     $querySpecies = "SELECT * FROM species ORDER BY ID";
     $statementSpecies = $db->prepare($querySpecies);
     $statementSpecies->execute(); 
+
+    $queryOrganization = "SELECT * FROM organizations ORDER BY ID";
+    $statementOrganization = $db->prepare($queryOrganization);
+    $statementOrganization->execute(); 
+
+    $queryOccupation = "SELECT * FROM occupations ORDER BY ID";
+    $statementOccupation = $db->prepare($queryOccupation);
+    $statementOccupation->execute(); 
 
 ?>
 
@@ -60,6 +72,24 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
                                 <option value="">Select a Species</option>
                                 <?php while($rowSpecies = $statementSpecies->fetch()):?>
                                     <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="occupation">Occupation</label>
+                            <select name="occupation" id="occupation">
+                                <option value="">Select an Occupation</option>
+                                <?php while($rowOccupation = $statementOccupation->fetch()):?>
+                                    <option value="<?=$rowOccupation['ID']?>"><?=$rowOccupation['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="organization">Organization</label>
+                            <select name="organization" id="organization">
+                                <option value="">Select an Organization</option>
+                                <?php while($rowOrganization = $statementOrganization->fetch()):?>
+                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>

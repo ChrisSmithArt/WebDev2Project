@@ -107,6 +107,118 @@ if ($_POST && !empty($_POST['NewSpeciesName']) && !empty($_POST['NewSpeciesDescr
     $validSpecies = false;
 }
 
+//ORGANIZATIONS
+$organizationQuery = "SELECT * FROM organizations ORDER BY ID";
+$organizationStatement = $db->prepare($organizationQuery);
+$organizationStatement->execute();
+
+
+$organizationValid = true;
+
+
+if($_POST){
+    if ($_POST['command'] == 'Update') {
+        // echo "<h2>Name: " . $_POST['OrganizationName']. "</h2>";
+        // echo "<h2>Description: " . $_POST['OrganizationDescription']. "</h2>";
+        // echo "<h2>ID: " . $_POST['OrganizationID']. "</h2>";
+        // echo empty($_POST['OrganizationName']);
+        // echo empty($_POST['OrganizationDescription']);
+            if(!empty($_POST['OrganizationName']) && !empty($_POST['OrganizationDescription'])){
+                $organizationName  = filter_input(INPUT_POST, 'OrganizationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $organizationDescription = filter_input(INPUT_POST, 'OrganizationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $organizationID = filter_input(INPUT_POST, 'OrganizationID', FILTER_SANITIZE_NUMBER_INT);
+                $organizationQuery = "UPDATE organizations SET Name = :Name, Description = :Description WHERE ID = :ID";
+                $organizationStatement = $db->prepare($organizationQuery);
+                $organizationStatement->bindValue(':Name', $organizationName);        
+                $organizationStatement->bindValue(':Description', $organizationDescription);
+                $organizationStatement->bindValue(':ID', $organizationID, PDO::PARAM_INT);
+                $organizationStatement->execute();
+                header("Location: Admin.php");
+            } else if (empty($_POST['OrganizationName']) && empty($_POST['OrganizationDescription'])){
+                $organizationValid = false;
+            }
+        }else if ($_POST['command'] == 'Delete'){
+            // echo "<h2>ID: " . $_POST['OrganizationID']. "</h2>";
+            $organizationID = filter_input(INPUT_POST, 'OrganizationID', FILTER_SANITIZE_NUMBER_INT);
+            $organizationQuery = "DELETE FROM organizations WHERE ID = :ID";
+            $organizationStatement = $db->prepare($organizationQuery);
+            $organizationStatement->bindValue(':ID', $organizationID, PDO::PARAM_INT);
+            $organizationStatement->execute();
+            header("Location: Admin.php");
+    }
+}
+$validOrganization = true;
+if ($_POST && !empty($_POST['NewOrganizationName']) && !empty($_POST['NewOrganizationDescription']) && $_POST['command'] == 'Create') {
+    $nameOrganization = filter_input(INPUT_POST, 'NewOrganizationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $descriptionOrganization = filter_input(INPUT_POST, 'NewOrganizationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $queryOrganization = "INSERT INTO organizations (Name, Description) VALUES (:Name, :Description)";        
+    $statementOrganization = $db->prepare($queryOrganization);
+    $statementOrganization->bindValue(':Name', $nameOrganization);
+    $statementOrganization->bindValue(':Description', $descriptionOrganization);
+    $statementOrganization->execute();
+    header("Location: Admin.php");
+    exit;
+} else if($_POST && empty($_POST['NewOrganizationName']) && empty($_POST['NewOrganizationDescription']) && $_POST['command'] == 'Create') {
+    $validOrganization = false;
+}
+
+
+//OCCUPATIONS
+$occupationQuery = "SELECT * FROM occupations ORDER BY ID";
+$occupationStatement = $db->prepare($occupationQuery);
+$occupationStatement->execute();
+
+
+$occupationValid = true;
+
+
+if($_POST){
+    if ($_POST['command'] == 'Update') {
+        // echo "<h2>Name: " . $_POST['OccupationName']. "</h2>";
+        // echo "<h2>Description: " . $_POST['OccupationDescription']. "</h2>";
+        // echo "<h2>ID: " . $_POST['OccupationID']. "</h2>";
+        // echo empty($_POST['OccupationName']);
+        // echo empty($_POST['OccupationDescription']);
+            if(!empty($_POST['OccupationName']) && !empty($_POST['OccupationDescription'])){
+                $occupationName  = filter_input(INPUT_POST, 'OccupationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $occupationDescription = filter_input(INPUT_POST, 'OccupationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $occupationID = filter_input(INPUT_POST, 'OccupationID', FILTER_SANITIZE_NUMBER_INT);
+                $occupationQuery = "UPDATE occupations SET Name = :Name, Description = :Description WHERE ID = :ID";
+                $occupationStatement = $db->prepare($occupationQuery);
+                $occupationStatement->bindValue(':Name', $occupationName);        
+                $occupationStatement->bindValue(':Description', $occupationDescription);
+                $occupationStatement->bindValue(':ID', $occupationID, PDO::PARAM_INT);
+                $occupationStatement->execute();
+                header("Location: Admin.php");
+            } else if (empty($_POST['OccupationName']) && empty($_POST['OccupationDescription'])){
+                $occupationValid = false;
+            }
+        }else if ($_POST['command'] == 'Delete'){
+            // echo "<h2>ID: " . $_POST['OccupationID']. "</h2>";
+            $occupationID = filter_input(INPUT_POST, 'OccupationID', FILTER_SANITIZE_NUMBER_INT);
+            $occupationQuery = "DELETE FROM occupations WHERE ID = :ID";
+            $occupationStatement = $db->prepare($occupationQuery);
+            $occupationStatement->bindValue(':ID', $occupationID, PDO::PARAM_INT);
+            $occupationStatement->execute();
+            header("Location: Admin.php");
+    }
+}
+$validOccupation = true;
+if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupationDescription']) && $_POST['command'] == 'Create') {
+    $nameOccupation = filter_input(INPUT_POST, 'NewOccupationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $descriptionOccupation = filter_input(INPUT_POST, 'NewOccupationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $queryOccupation = "INSERT INTO occupations (Name, Description) VALUES (:Name, :Description)";        
+    $statementOccupation = $db->prepare($queryOccupation);
+    $statementOccupation->bindValue(':Name', $nameOccupation);
+    $statementOccupation->bindValue(':Description', $descriptionOccupation);
+    $statementOccupation->execute();
+    header("Location: Admin.php");
+    exit;
+} else if($_POST && empty($_POST['NewOccupationName']) && empty($_POST['NewOccupationDescription']) && $_POST['command'] == 'Create') {
+    $validOccupation = false;
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -122,6 +234,121 @@ if ($_POST && !empty($_POST['NewSpeciesName']) && !empty($_POST['NewSpeciesDescr
     <?php include("header.php");?>
     <main>
         <div id="categoryLibrary">
+        <div class="categoryContainer">    
+                <div id="organizationAdd">
+                    <div id="invalidated">
+                        <?php if(!$validOrganization):?>
+                            You didn't enter any information!
+                        <?php endif ?>
+                    </div>
+                    <form action="Admin.php" method="post">
+                        <fieldset>
+                            <legend>New Organization</legend>
+                            <div>
+                                <label for="NewOrganizationName">Name</label>
+                                <input name="NewOrganizationName" id="NewOrganizationName">
+                            </div>
+                            <div>
+                                <label for="NewOrganizationDescription">Description</label>
+                                <textarea name="NewOrganizationDescription" id="NewOrganizationDescription"></textarea>
+                            </div>
+                            <div id="buttonContainer">
+                                <input class="button" type="submit" name="command" value="Create">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="divider"></div>
+                <div class="organizationEdit">
+                    <div>
+                        <?php if(!$organizationValid):?>
+                                You didn't change any information!
+                            <?php endif ?>
+                        <?php if(!$organizationStatement):?>
+                            No query!
+                        <?php endif ?>
+                    </div>
+                    <?php while($organizationRow = $organizationStatement->fetch()):?>
+                        <form method="post">
+                            <fieldset>
+                                <legend>Edit Organization</legend>
+                                <div>
+                                    <label for="OrganizationName">Name</label>
+                                    <input type="text" name="OrganizationName" id="OrganizationName" value="<?=$organizationRow['Name']?>">
+                                </div>
+                                <div>
+                                    <label for="OrganizationDescription">Description</label>
+                                    <textarea name="OrganizationDescription" id="OrganizationDescription"><?= $organizationRow['Description'] ?></textarea>
+                                </div>
+                                <div>
+                                    <h3>Organization ID: <?=$organizationRow['ID']?></h3>
+                                    <input type="hidden" name="OrganizationID" if="OrganizationID" value="<?=$organizationRow['ID']?>">
+                                    <input class="button" type="submit" name="command" value="Update">
+                                    <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Organization?')">
+                                </div>
+                            </fieldset>
+                        </form>          
+                    <?php endwhile ?>
+                </div>
+            </div>
+            <div class="categoryContainer">    
+                <div id="occupationAdd">
+                    <div id="invalidated">
+                        <?php if(!$validOccupation):?>
+                            You didn't enter any information!
+                        <?php endif ?>
+                    </div>
+                    <form action="Admin.php" method="post">
+                        <fieldset>
+                            <legend>New Occupation</legend>
+                            <div>
+                                <label for="NewOccupationName">Name</label>
+                                <input name="NewOccupationName" id="NewOccupationName">
+                            </div>
+                            <div>
+                                <label for="NewOccupationDescription">Description</label>
+                                <textarea name="NewOccupationDescription" id="NewOccupationDescription"></textarea>
+                            </div>
+                            <div id="buttonContainer">
+                                <input class="button" type="submit" name="command" value="Create">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="divider"></div>
+                <div class="occupationEdit">
+                    <div>
+                        <?php if(!$occupationValid):?>
+                                You didn't change any information!
+                            <?php endif ?>
+                        <?php if(!$occupationStatement):?>
+                            No query!
+                        <?php endif ?>
+                    </div>
+                    <?php while($occupationRow = $occupationStatement->fetch()):?>
+                        <form method="post">
+                            <fieldset>
+                                <legend>Edit Occupation</legend>
+                                <div>
+                                    <label for="OccupationName">Name</label>
+                                    <input type="text" name="OccupationName" id="OccupationName" value="<?=$occupationRow['Name']?>">
+                                </div>
+                                <div>
+                                    <label for="OccupationDescription">Description</label>
+                                    <textarea name="OccupationDescription" id="OccupationDescription"><?= $occupationRow['Description'] ?></textarea>
+                                </div>
+                                <div>
+                                    <h3>Occupation ID: <?=$occupationRow['ID']?></h3>
+                                    <input type="hidden" name="OccupationID" if="OccupationID" value="<?=$occupationRow['ID']?>">
+                                    <input class="button" type="submit" name="command" value="Update">
+                                    <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Occupation?')">
+                                </div>
+                            </fieldset>
+                        </form>          
+                    <?php endwhile ?>
+                </div>
+            </div>
+
             <div class="categoryContainer">    
                 <div id="speciesAdd">
                     <div id="invalidated">
