@@ -6,16 +6,22 @@ $valid = true;
 if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $query = "INSERT INTO npcs (name, description) VALUES (:name, :description)";        
+    $SpeciesID = $_POST['species'];
+    $query = "INSERT INTO npcs (name, description, SpeciesID) VALUES (:name, :description, :SpeciesID)";        
     $statement = $db->prepare($query);
     $statement->bindValue(':name', $name);
     $statement->bindValue(':description', $description);
+    $statement->bindValue(':SpeciesID', $SpeciesID);
     $statement->execute();
     header("Location: index.php");
     exit;
 } else if($_POST && empty($_POST['name']) && empty($_POST['description']) && $_POST['command'] == 'Create') {
     $valid = false;
 }
+
+    $querySpecies = "SELECT * FROM species ORDER BY ID";
+    $statementSpecies = $db->prepare($querySpecies);
+    $statementSpecies->execute(); 
 
 ?>
 
@@ -47,6 +53,15 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
                         <div>
                             <label for="description">Description</label>
                             <textarea name="description" id="description"></textarea>
+                        </div>
+                        <div>
+                            <label for="species">Description</label>
+                            <select name="species" id="species">
+                                <option value="">Select a Species</option>
+                                <?php while($rowSpecies = $statementSpecies->fetch()):?>
+                                    <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
                         </div>
                         <div id="buttonContainer">
                             <input class="button" type="submit" name="command" value="Create">

@@ -1,10 +1,14 @@
 <?php
 require('connect.php');
 
+if($_POST){
+    
+} else {
+    
      $query = "SELECT * FROM NPCs ORDER BY ID";
      $statement = $db->prepare($query);
      $statement->execute(); 
-
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +23,9 @@ require('connect.php');
 <body>
     <?php include("header.php");?>
     <main>
+        <div id="searchForm">
+
+        </div>
         <div id="cardLibrary">
             <?php while($row = $statement->fetch()):?>
                 <div class="characterCard">  

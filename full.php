@@ -8,9 +8,19 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
     $statement = $db->prepare($query);
     $statement->execute(); 
     $row = $statement->fetch();
+
+    $species = $row['SpeciesID'];
+
+    $querySpecies = "SELECT * FROM species WHERE ID = $species";
+    $statementSpecies = $db->prepare($querySpecies);
+    $statementSpecies->execute(); 
+    $rowSpecies = $statementSpecies->fetch();
+
 } else {
     header("Location: index.php");
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +39,7 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
             <?php if($row): ?>
                 <h2>Name: <?= $row['Name']?></h2>
                 <div>Description: <?= $row['Description'] ?></div>
+                <div>Species: <?= $rowSpecies['Name'] ?></div>
                 <a href="edit.php?ID=<?=$ID?>">edit</a>
             <?php else: ?>
                 <?php header("Location: index.php")?>
