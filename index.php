@@ -23,8 +23,7 @@ require('connect.php');
             <?php while($row = $statement->fetch()):?>
                 <div class="characterCard">  
                     <h2>Name: <?=$row['Name']?></h2>
-                    <p>Description: <?=$row['Description']?></p> 
-                    <a href="edit.php?ID=<?=$row['ID']?>">Edit</a> 
+                    <a href="full.php?ID=<?=$row['ID']?>">Show Full Info</a> 
                 </div>               
             <?php endwhile ?>
         </div>
