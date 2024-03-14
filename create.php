@@ -29,6 +29,7 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
     <title>Create an NPC</title>
 </head>
 <body>
+<?php include("header.php");?>
     <main>
             <div>
                 <div id="invalidated">
