@@ -11,10 +11,16 @@
                     $Name  = filter_input(INPUT_POST, 'Name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $Description = filter_input(INPUT_POST, 'Description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $ID = filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_NUMBER_INT);
-                    $query = "UPDATE npcs SET Name = :Name, Description = :Description WHERE ID = :ID";
+                    $SpeciesID = $_POST['species'];
+                    $OccupationID = $_POST['occupation'];
+                    $OrganizationID = $_POST['organization'];
+                    $query = "UPDATE npcs SET Name = :Name, Description = :Description, SpeciesID = :SpeciesID, OccupationID = :OccupationID, OrganizationID = :OrganizationID  WHERE ID = :ID";
                     $statement = $db->prepare($query);
                     $statement->bindValue(':Name', $Name);        
                     $statement->bindValue(':Description', $Description);
+                    $statement->bindValue(':SpeciesID', $SpeciesID);
+                    $statement->bindValue(':OccupationID', $OccupationID);
+                    $statement->bindValue(':OrganizationID', $OrganizationID);
                     $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
                     $statement->execute();
                     header("Location: index.php");
@@ -36,6 +42,22 @@
             $statement->execute();
             $npc = $statement->fetch();
         } 
+
+        $querySpecies = "SELECT * FROM species ORDER BY ID";
+        $statementSpecies = $db->prepare($querySpecies);
+        $statementSpecies->execute();
+    
+        $queryOrganization = "SELECT * FROM organizations ORDER BY ID";
+        $statementOrganization = $db->prepare($queryOrganization);
+        $statementOrganization->execute(); 
+    
+        $queryOccupation = "SELECT * FROM occupations ORDER BY ID";
+        $statementOccupation = $db->prepare($queryOccupation);
+        $statementOccupation->execute(); 
+
+        
+
+
     } else {
         header("Location: index.php");
     }
@@ -64,6 +86,33 @@
                         <div>
                             <label for="Description">Description</label>
                             <textarea name="Description" id="Description"><?= $npc['Description'] ?></textarea>
+                        </div>
+                        <div>
+                            <label for="species">Description</label>
+                            <select name="species" id="species">
+                                <option value="">Select a Species</option>
+                                <?php while($rowSpecies = $statementSpecies->fetch()):?>
+                                    <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="occupation">Occupation</label>
+                            <select name="occupation" id="occupation">
+                                <option value="">Select an Occupation</option>
+                                <?php while($rowOccupation = $statementOccupation->fetch()):?>
+                                    <option value="<?=$rowOccupation['ID']?>"><?=$rowOccupation['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="organization">Organization</label>
+                            <select name="organization" id="organization">
+                                <option value="">Select an Organization</option>
+                                <?php while($rowOrganization = $statementOrganization->fetch()):?>
+                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
                         </div>
                         <div>
                             <input type="hidden" name="ID" value="<?=$ID?>">

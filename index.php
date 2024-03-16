@@ -14,11 +14,74 @@ $statementOccupation = $db->prepare($queryOccupation);
 $statementOccupation->execute(); 
 
 
-if($_POST && !empty($_POST['species'])){
-    $query = "SELECT * FROM NPCs WHERE SpeciesID = :Species ORDER BY ID";
-    $SpeciesID = $_POST['species'];
+function checkPost(){
+    if(!empty($_POST['species'])){
+        return true;
+    }
+    if(!empty($_POST['occupation'])){
+        return true;
+    }
+    if(!empty($_POST['organization'])){
+        return true;
+    }
+    return false;
+    
+}
+
+function whereClause(){
+    $stringWhere = "";
+    $countWhere = 0;
+
+    if(!empty($_POST['species'])){
+        $stringWhere = $stringWhere."SpeciesID = :Species";
+        $countWhere ++;
+    }
+    if(!empty($_POST['organization'])){
+        if($countWhere > 0){
+            $stringWhere = $stringWhere." AND ";
+        }
+        $stringWhere = $stringWhere."OrganizationID = :Organization";
+        $countWhere ++;
+    }
+    if(!empty($_POST['occupation'])){
+        if($countWhere > 0){
+            $stringWhere = $stringWhere." AND ";
+        }
+        $stringWhere = $stringWhere."OccupationID = :Occupation";
+        $countWhere ++;
+    }
+    return $stringWhere;
+}
+
+
+if($_POST && checkPost()){
+    $whereC = whereClause();
+    $query = "SELECT * FROM NPCs WHERE $whereC ORDER BY ID";
+    
+    echo $whereC;
+
+    if(!empty($_POST['species'])){
+        $SpeciesID = $_POST['species'];
+    }
+    if(!empty($_POST['organization'])){
+        $OrganizationID = $_POST['organization'];
+    }
+    if(!empty($_POST['occupation'])){
+        $OccupationID = $_POST['occupation'];
+    }
+
     $statement = $db->prepare($query);
-    $statement->bindValue(':Species', $SpeciesID, PDO::PARAM_INT);
+
+    if(!empty($_POST['species'])){
+        $statement->bindValue(':Species', $SpeciesID, PDO::PARAM_INT);
+    }
+    if(!empty($_POST['organization'])){
+        $statement->bindValue(':Organization', $OrganizationID, PDO::PARAM_INT);
+    }
+    if(!empty($_POST['occupation'])){
+        $statement->bindValue(':Occupation', $OccupationID, PDO::PARAM_INT);
+    }
+
     $statement->execute(); 
 } else {
     
@@ -54,8 +117,8 @@ if($_POST && !empty($_POST['species'])){
                         </select>
                     </div>
                     <div>
-                        <label for="Occupation">Occupation</label>
-                        <select name="Occupation" id="Occupation">
+                        <label for="occupation">Occupation</label>
+                        <select name="occupation" id="occupation">
                             <option value="">Select an Occupation</option>
                             <?php while($rowOrganization = $statementOccupation->fetch()):?>
                                 <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>

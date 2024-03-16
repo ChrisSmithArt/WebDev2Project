@@ -2,25 +2,47 @@
 
 require('connect.php');
 
+function checkFullFields(){
+    if(empty($_POST['name'])){
+        return false;
+    }
+    if(empty($_POST['description'])){
+        return false;
+    }
+    if(empty($_POST['species'])){
+        return false;
+    }
+    if(empty($_POST['organization'])){
+        return false;
+    }
+    if(empty($_POST['occupation'])){
+        return false;
+    }
+    return true;
+}
+
+
 $valid = true;
-if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
-    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $SpeciesID = $_POST['species'];
-    $OccupationID = $_POST['occupation'];
-    $OrganizationID = $_POST['organization'];
-    $query = "INSERT INTO npcs (name, description, SpeciesID, OccupationID, OrganizationID) VALUES (:name, :description, :SpeciesID, :OccupationID, :OrganizationID)";        
-    $statement = $db->prepare($query);
-    $statement->bindValue(':name', $name);
-    $statement->bindValue(':description', $description);
-    $statement->bindValue(':SpeciesID', $SpeciesID);
-    $statement->bindValue(':OccupationID', $OccupationID);
-    $statement->bindValue(':OrganizationID', $OrganizationID);
-    $statement->execute();
-    header("Location: index.php");
-    exit;
-} else if($_POST && empty($_POST['name']) && empty($_POST['description']) && $_POST['command'] == 'Create') {
-    $valid = false;
+if($_POST && $_POST['command'] == 'Create'){
+    if (checkFullFields()){
+        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $SpeciesID = $_POST['species'];
+        $OccupationID = $_POST['occupation'];
+        $OrganizationID = $_POST['organization'];
+        $query = "INSERT INTO npcs (name, description, SpeciesID, OccupationID, OrganizationID) VALUES (:name, :description, :SpeciesID, :OccupationID, :OrganizationID)";        
+        $statement = $db->prepare($query);
+        $statement->bindValue(':name', $name);
+        $statement->bindValue(':description', $description);
+        $statement->bindValue(':SpeciesID', $SpeciesID);
+        $statement->bindValue(':OccupationID', $OccupationID);
+        $statement->bindValue(':OrganizationID', $OrganizationID);
+        $statement->execute();
+        header("Location: index.php");
+        exit;
+    } else {
+        $valid = false;
+    }
 }
 
     $querySpecies = "SELECT * FROM species ORDER BY ID";
@@ -52,7 +74,7 @@ if ($_POST && !empty($_POST['name']) && !empty($_POST['description'])) {
             <div>
                 <div id="invalidated">
                     <?php if(!$valid):?>
-                        You didn't enter any information!
+                        You didn't enter all the information!
                     <?php endif ?>
                 </div>
                 <form action="create.php" method="post">
