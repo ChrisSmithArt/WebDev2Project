@@ -1,13 +1,33 @@
 <?php
     require('connect.php');
 
+    function checkFullFields(){
+        if(empty($_POST['Name'])){
+            return false;
+        }
+        if(empty($_POST['Description'])){
+            return false;
+        }
+        if(empty($_POST['species'])){
+            return false;
+        }
+        if(empty($_POST['organization'])){
+            return false;
+        }
+        if(empty($_POST['occupation'])){
+            return false;
+        }
+        return true;
+    }
+
+
     $valid = true;
     $npc = false;
     $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT);
     if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
         if($_POST){
             if ($_POST['command'] == 'Update') {
-                if(!empty($_POST['Name']) && !empty($_POST['Description'])){
+                if(checkFullFields()){
                     $Name  = filter_input(INPUT_POST, 'Name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $Description = filter_input(INPUT_POST, 'Description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $ID = filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_NUMBER_INT);
@@ -24,7 +44,7 @@
                     $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
                     $statement->execute();
                     header("Location: index.php");
-                } else if (empty($_POST['Name']) && empty($_POST['Description'])){
+                } else {
                     $valid = false;
                 }
             }else if ($_POST['command'] == 'Delete'){
@@ -124,7 +144,7 @@
             <?php else: ?>
                 <div>
                     <?php if(!$valid):?>
-                        Invalid: You cannot update an NPC to be empty!
+                        Invalid: You cannot update an NPC with empty values!
                     <?php else: ?>
                         <?php header("Location: index.php")?>
                     <?php endif ?>
