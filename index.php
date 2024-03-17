@@ -24,6 +24,9 @@ function checkPost(){
     if(!empty($_POST['organization'])){
         return true;
     }
+    if(!empty($_POST['name'])){
+        return true;
+    }
     return false;
     
 }
@@ -50,6 +53,13 @@ function whereClause(){
         $stringWhere = $stringWhere."OccupationID = :Occupation";
         $countWhere ++;
     }
+    if(!empty($_POST['name'])){
+        if($countWhere > 0){
+            $stringWhere = $stringWhere." AND ";
+        }
+        $stringWhere = $stringWhere."Name LIKE :Name";
+        $countWhere ++;
+    }
     return $stringWhere;
 }
 
@@ -69,6 +79,9 @@ if($_POST && checkPost()){
     if(!empty($_POST['occupation'])){
         $OccupationID = $_POST['occupation'];
     }
+    if(!empty($_POST['name'])){
+        $npcName = $_POST['name']."%";
+    }
 
     $statement = $db->prepare($query);
 
@@ -80,6 +93,9 @@ if($_POST && checkPost()){
     }
     if(!empty($_POST['occupation'])){
         $statement->bindValue(':Occupation', $OccupationID, PDO::PARAM_INT);
+    }
+    if(!empty($_POST['name'])){
+        $statement->bindValue(':Name', $npcName);
     }
 
     $statement->execute(); 
@@ -107,6 +123,10 @@ if($_POST && checkPost()){
             <form  id="searchForm" action="index.php" method="post">
                 <fieldset>
                     <legend>Search Criteria</legend>
+                    <div>
+                        <label for="name">Name</label>
+                        <input name="name" id="name">
+                    </div>
                     <div>
                         <label for="species">Species</label>
                         <select name="species" id="species">
@@ -142,8 +162,11 @@ if($_POST && checkPost()){
         </div>
         <div id="cardLibrary">
             <?php while($row = $statement->fetch()):?>
-                <div class="characterCard">  
-                    <h2>Name: <?=$row['Name']?></h2>
+                <div class="characterCard">
+                    <div>
+                        <img class="portrait" src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                    </div>  
+                    <h2><?=$row['Name']?></h2>
                     <a href="full.php?ID=<?=$row['ID']?>">Show Full Info</a> 
                 </div>               
             <?php endwhile ?>

@@ -1,6 +1,7 @@
 <?php
 
     require('connect.php');
+    
 
 if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
     $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT);
@@ -54,6 +55,9 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
         <?php include("header.php");?>     
         <div>
             <?php if($row): ?>
+                <div class="portrait">
+                    <img src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                </div>  
                 <h2>Name: <?= $row['Name']?></h2>
                 <div>Description: <?= $row['Description'] ?></div>
                 <div>Species: <?= $rowSpecies['Name'] ?></div>

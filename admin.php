@@ -1,5 +1,7 @@
 <?php
 require('connect.php');
+require('authenticate.php');
+
 
 //AREAS
      $areaQuery = "SELECT * FROM areas ORDER BY ID";
