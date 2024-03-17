@@ -4,10 +4,6 @@
 
 
     function checkFullFields(){
-        if(!checkImage()){
-            //echo "didn't pass check";
-            return false;
-        }
         if(empty($_POST['Name'])){
             return false;
         }
@@ -47,7 +43,7 @@
                     $statement->bindValue(':SpeciesID', $SpeciesID);
                     $statement->bindValue(':OccupationID', $OccupationID);
                     $statement->bindValue(':OrganizationID', $OrganizationID);
-                    $statement->bindValue(':imgsrc', bindImage());
+                    $statement->bindValue(':imgsrc', checkImage() ? bindImage() : "images/default.jpg" );
                     $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
                     $statement->execute();
                     header("Location: index.php");
@@ -194,7 +190,7 @@
                             <select name="species" id="species">
                                 <option value="">Select a Species</option>
                                 <?php while($rowSpecies = $statementSpecies->fetch()):?>
-                                    <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                    <option value="<?=$rowSpecies['ID']?>"  <?=$rowSpecies['ID'] == $npc['SpeciesID'] ? ' selected="selected"' : ''?>><?=$rowSpecies['Name']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -203,7 +199,7 @@
                             <select name="occupation" id="occupation">
                                 <option value="">Select an Occupation</option>
                                 <?php while($rowOccupation = $statementOccupation->fetch()):?>
-                                    <option value="<?=$rowOccupation['ID']?>"><?=$rowOccupation['Name']?></option>
+                                    <option value="<?=$rowOccupation['ID']?>" <?=$rowOccupation['ID'] == $npc['OccupationID'] ? ' selected="selected"' : ''?>><?=$rowOccupation['Name']?> </option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -212,7 +208,7 @@
                             <select name="organization" id="organization">
                                 <option value="">Select an Organization</option>
                                 <?php while($rowOrganization = $statementOrganization->fetch()):?>
-                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
+                                    <option value="<?=$rowOrganization['ID']?>"  <?=$rowOrganization['ID'] == $npc['OrganizationID'] ? ' selected="selected"' : ''?>><?=$rowOrganization['Name']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>

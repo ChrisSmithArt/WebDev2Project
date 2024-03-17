@@ -5,10 +5,6 @@ require('authenticate.php');
 
 
 function checkFullFields(){
-    if(!checkImage()){
-        //echo "didn't pass check";
-        return false;
-    }
     if(empty($_POST['name'])){
         return false;
     }
@@ -44,7 +40,7 @@ if($_POST && $_POST['command'] == 'Create'){
         $statement->bindValue(':SpeciesID', $SpeciesID);
         $statement->bindValue(':OccupationID', $OccupationID);
         $statement->bindValue(':OrganizationID', $OrganizationID);
-        $statement->bindValue(':imgsrc', bindImage());
+        $statement->bindValue(':imgsrc', checkImage() ? bindImage() : "images/default.jpg" );
         $statement->execute();
         header("Location: index.php");
         exit;
