@@ -1,5 +1,6 @@
 <?php
 require('connect.php');
+session_start();
 
 $querySpecies = "SELECT * FROM species ORDER BY ID";
 $statementSpecies = $db->prepare($querySpecies);
@@ -163,8 +164,12 @@ if($_POST && checkPost()){
         <div id="cardLibrary">
             <?php while($row = $statement->fetch()):?>
                 <div class="characterCard">
-                    <div>
-                        <img class="portrait" src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                    <div class="portrait">
+                        <?php if($row['imgsrc'] != "images/default.jpg"):  ?>
+                            <img class="portrait" src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                        <?php else: ?>
+                            <h3>No Portrait Assigned.</h3>
+                        <?php endif ?>
                     </div>  
                     <h2><?=$row['Name']?></h2>
                     <a href="full.php?ID=<?=$row['ID']?>">Show Full Info</a> 

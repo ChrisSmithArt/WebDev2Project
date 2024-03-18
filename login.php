@@ -1,0 +1,67 @@
+<?php
+
+require('connect.php');
+session_start();
+
+
+
+
+$query = "SELECT * FROM users ORDER BY ID";
+$statement = $db->prepare($query);
+$statement->execute(); 
+
+
+if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
+    $_SESSION['loggedIn'] = false;
+    $_SESSION['Admin'] = false;
+  } else {
+    if(!$_SESSION['loggedIn']){
+      if(!empty( $_POST['userName']) && !empty($_POST['password'])){
+        while ($row = $statement->fetch()) {
+          if($_POST['userName'] === $row['Name'] && $_POST['password'] === $row['Password'] ){
+            $_SESSION['loggedIn'] = true; 
+            if($row['ID'] === 1){
+                $_SESSION['Admin'] = true;
+            }
+            header("location: index.php"); 
+          }
+        }
+      }
+    }
+  }
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>Your NPC Database</title>
+</head>
+<body>
+    <?php include("header.php");?>
+    <main>
+        <div>
+            <form  id="loginForm" action="login.php" method="post">
+                <fieldset>
+                    <legend>Login Form</legend>
+                    <div>
+                        <label for="userName">User Name</label>
+                        <input name="userName" id="userName">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input name="password" id="password">
+                    </div>
+                    <div id="buttonContainer">
+                        <input class="button" type="submit" name="command" value="login">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,7 +1,18 @@
 <?php
 require('connect.php');
-require('authenticate.php');
+// require('authenticate.php');
+session_start();
 
+if(!isset($_SESSION['loggedIn']) || !$_SESSION['loggedIn']){
+    header("Location: login.php");
+} else if(!$_SESSION['Admin']){
+    header("Location: index.php");
+}
+
+//USERS
+    $userQuery = "SELECT * FROM users ORDER BY ID";
+    $userStatement = $db->prepare($userQuery);
+    $userStatement->execute(); 
 
 //AREAS
      $areaQuery = "SELECT * FROM areas ORDER BY ID";
@@ -236,7 +247,8 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
     <?php include("header.php");?>
     <main>
         <div id="categoryLibrary">
-        <div class="categoryContainer">    
+        <div class="categoryContainer">
+        <h2>ORGANIZATIONS</h2>        
                 <div id="organizationAdd">
                     <div id="invalidated">
                         <?php if(!$validOrganization):?>
@@ -293,7 +305,8 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                     <?php endwhile ?>
                 </div>
             </div>
-            <div class="categoryContainer">    
+            <div class="categoryContainer">
+                <h2>OCCUPATIONS</h2>    
                 <div id="occupationAdd">
                     <div id="invalidated">
                         <?php if(!$validOccupation):?>
@@ -351,7 +364,8 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                 </div>
             </div>
 
-            <div class="categoryContainer">    
+            <div class="categoryContainer">
+                <h2>Species</h2>        
                 <div id="speciesAdd">
                     <div id="invalidated">
                         <?php if(!$validSpecies):?>
@@ -408,7 +422,8 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                     <?php endwhile ?>
                 </div>
             </div>
-            <div class="categoryContainer">    
+            <div class="categoryContainer">  
+                <h2>AREAS</h2>            
                 <div id="areaAdd">
                     <div id="invalidated">
                         <?php if(!$validArea):?>
@@ -462,6 +477,22 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                                 </div> 
                             </fieldset>
                         </form>          
+                    <?php endwhile ?>
+                </div>
+            </div>
+            <div class="categoryContainer">
+                <h2>USERS</h2>    
+                <div class="userInfo">
+                    <div>
+                        <?php if(!$userStatement):?>
+                            No query!
+                        <?php endif ?>
+                    </div>
+                    <?php while($userRow = $userStatement->fetch()):?>
+                        <div>
+                            <h2>Username: <?=$userRow['Name']?></h2>
+                            <h3>Password: <?= $userRow['Password'] ?></h3>
+                        </div>
                     <?php endwhile ?>
                 </div>
             </div>

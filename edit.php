@@ -1,6 +1,13 @@
 <?php
     require('connect.php');
-    require('authenticate.php');
+    // require('authenticate.php');
+    session_start();
+
+    if(!isset($_SESSION['loggedIn']) || !$_SESSION['loggedIn']){
+        header("Location: login.php");
+    } else if(!$_SESSION['Admin']){
+        header("Location: index.php");
+    }
 
 
     function checkFullFields(){

@@ -1,7 +1,7 @@
 <?php
-
     require('connect.php');
-    
+    session_start();
+
 
 if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
     $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT);
@@ -56,7 +56,11 @@ if(filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT)){
         <div>
             <?php if($row): ?>
                 <div class="portrait">
-                    <img src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                    <?php if($row['imgsrc'] != "images/default.jpg"):  ?>
+                        <img class="portrait" src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                    <?php else: ?>
+                        <h3>No Portrait Assigned.</h3>
+                    <?php endif ?>
                 </div>  
                 <h2>Name: <?= $row['Name']?></h2>
                 <div>Description: <?= $row['Description'] ?></div>
