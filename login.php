@@ -20,13 +20,18 @@ if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
       if(!empty( $_POST['userName']) && !empty($_POST['password'])){
         while ($row = $statement->fetch()) {
           if($_POST['userName'] === $row['Name'] && $_POST['password'] === $row['Password'] ){
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['justLoggedIn'] = true;
             if($row['ID'] === 1){
                 $_SESSION['Admin'] = true;
             }
-            header("location: index.php"); 
+            $_SESSION['loggedIn'] = true;
+            $_SESSION['justLoggedIn'] = true;
+            header("location: index.php");
           }
+        }
+        if(!$_SESSION['loggedIn']){
+            echo '<script type="text/javascript">
+            window.onload = function () { alert("Login Failure."); } 
+         </script>'; 
         }
       }
     }

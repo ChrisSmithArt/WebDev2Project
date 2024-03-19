@@ -14,6 +14,58 @@ if(!isset($_SESSION['loggedIn']) || !$_SESSION['loggedIn']){
     $userStatement = $db->prepare($userQuery);
     $userStatement->execute(); 
 
+    $userValid = true;
+
+
+    if($_POST){
+        if ($_POST['command'] == 'Update') {
+            // echo "<h2>Name: " . $_POST['UserName']. "</h2>";
+            // echo "<h2>Password: " . $_POST['UserPassword']. "</h2>";
+            // echo "<h2>ID: " . $_POST['UserID']. "</h2>";
+            // echo empty($_POST['UserName']);
+            // echo empty($_POST['UserPassword']);
+                if(!empty($_POST['UserName']) && !empty($_POST['UserPassword'])){
+                    $userName  = filter_input(INPUT_POST, 'UserName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    $userPassword = filter_input(INPUT_POST, 'UserPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    $userID = filter_input(INPUT_POST, 'UserID', FILTER_SANITIZE_NUMBER_INT);
+                    $userQuery = "UPDATE users SET Name = :Name, Password = :Password WHERE ID = :ID";
+                    $userStatement = $db->prepare($userQuery);
+                    $userStatement->bindValue(':Name', $userName);        
+                    $userStatement->bindValue(':Password', $userPassword);
+                    $userStatement->bindValue(':ID', $userID, PDO::PARAM_INT);
+                    $userStatement->execute();
+                    header("Location: Admin.php");
+                } else if (empty($_POST['UserName']) && empty($_POST['UserPassword'])){
+                    $userValid = false;
+                }
+            }else if ($_POST['command'] == 'Delete'){
+                // echo "<h2>ID: " . $_POST['UserID']. "</h2>";
+                $userID = filter_input(INPUT_POST, 'UserID', FILTER_SANITIZE_NUMBER_INT);
+                $userQuery = "DELETE FROM users WHERE ID = :ID";
+                $userStatement = $db->prepare($userQuery);
+                $userStatement->bindValue(':ID', $userID, PDO::PARAM_INT);
+                $userStatement->execute();
+                header("Location: Admin.php");
+        }
+    }
+    $validUser = true;
+    if ($_POST && !empty($_POST['NewUserName']) && !empty($_POST['NewUserPassword']) && $_POST['command'] == 'Create') {
+        $nameUser = filter_input(INPUT_POST, 'NewUserName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $passwordUser = filter_input(INPUT_POST, 'NewUserPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $queryUser = "INSERT INTO users (Name, Password) VALUES (:Name, :Password)";        
+        $statementUser = $db->prepare($queryUser);
+        $statementUser->bindValue(':Name', $nameUser);
+        $statementUser->bindValue(':Password', $passwordUser);
+        $statementUser->execute();
+        header("Location: Admin.php");
+        exit;
+    } else if($_POST && empty($_POST['NewUserName']) && empty($_POST['NewUserPassword']) && $_POST['command'] == 'Create') {
+        $validUser = false;
+    }
+
+
+
+
 //AREAS
      $areaQuery = "SELECT * FROM areas ORDER BY ID";
      $areaStatement = $db->prepare($areaQuery);
@@ -477,19 +529,61 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                     <?php endwhile ?>
                 </div>
             </div>
-            <div class="categoryContainer">
-                <h2>USERS</h2>    
-                <div class="userInfo">
+            <div class="categoryContainer">  
+                <h2>USERS</h2>            
+                <div id="userAdd">
+                    <div id="invalidated">
+                        <?php if(!$validArea):?>
+                            You didn't enter any information!
+                        <?php endif ?>
+                    </div>
+                    <form action="Admin.php" method="post">
+                        <fieldset>
+                            <legend>New Area</legend>
+                            <div>
+                                <label for="NewUserName">User Name</label>
+                                <input name="NewUserName" id="NewUserName">
+                            </div>
+                            <div>
+                                <label for="NewUserPassword">Password</label>
+                                <input name="NewUserPassword" id="NewUserPassword">
+                            </div>
+                            <div id="buttonContainer">
+                                <input class="button" type="submit" name="command" value="Create">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="divider"></div>
+                <div class="userEdit">
                     <div>
+                        <?php if(!$userValid):?>
+                                You didn't change any information!
+                            <?php endif ?>
                         <?php if(!$userStatement):?>
                             No query!
                         <?php endif ?>
                     </div>
                     <?php while($userRow = $userStatement->fetch()):?>
-                        <div>
-                            <h2>Username: <?=$userRow['Name']?></h2>
-                            <h3>Password: <?= $userRow['Password'] ?></h3>
-                        </div>
+                        <form method="post">
+                            <fieldset>
+                                <legend>Edit User</legend>
+                                <div>
+                                    <label for="UserName">Name</label>
+                                    <input type="text" name="UserName" id="UserName" value="<?=$userRow['Name']?>">
+                                </div>
+                                <div>
+                                    <label for="UserPassword">Password</label>
+                                    <input type="text" name="UserPassword" id="UserPassword" value="<?=$userRow['Password']?>">
+                                </div>
+                                <div>
+                                    <h3>User ID: <?=$userRow['ID']?></h3>
+                                    <input type="hidden" name="UserID" if="UserID" value="<?=$userRow['ID']?>">
+                                    <input class="button" type="submit" name="command" value="Update">
+                                    <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this User?')">
+                                </div>
+                            </fieldset>
+                        </form>          
                     <?php endwhile ?>
                 </div>
             </div>
