@@ -14,12 +14,14 @@ $statement->execute();
 if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
     $_SESSION['loggedIn'] = false;
     $_SESSION['Admin'] = false;
+    $_SESSION['justLoggedIn'] = false;
   } else {
     if(!$_SESSION['loggedIn']){
       if(!empty( $_POST['userName']) && !empty($_POST['password'])){
         while ($row = $statement->fetch()) {
           if($_POST['userName'] === $row['Name'] && $_POST['password'] === $row['Password'] ){
-            $_SESSION['loggedIn'] = true; 
+            $_SESSION['loggedIn'] = true;
+            $_SESSION['justLoggedIn'] = true;
             if($row['ID'] === 1){
                 $_SESSION['Admin'] = true;
             }
@@ -35,10 +37,7 @@ if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
+    <?php include("headInfo.php");?>
     <title>Your NPC Database</title>
 </head>
 <body>
@@ -62,6 +61,7 @@ if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
                 </fieldset>
             </form>
         </div>
+        
     </main>
 </body>
 </html>

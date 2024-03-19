@@ -1,3 +1,6 @@
+<header>
+    <h1>Character Database</h1>
+</header>
 <nav>
     <ul>
         <li><a href="index.php">Main</a></li>

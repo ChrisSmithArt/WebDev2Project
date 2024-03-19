@@ -15,6 +15,23 @@ $statementOccupation = $db->prepare($queryOccupation);
 $statementOccupation->execute(); 
 
 
+if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && $_SESSION['justLoggedIn']){
+    echo '<script type="text/javascript">
+       window.onload = function () { alert("You logged in."); } 
+    </script>'; 
+    $_SESSION['justLoggedIn'] = false;
+}
+
+if($_SESSION['justLoggedOut']){
+    echo '<script type="text/javascript">
+    window.onload = function () { alert("You logged out."); } 
+ </script>'; 
+ $_SESSION['justLoggedOut'] = false;
+}
+
+
+
+
 function checkPost(){
     if(!empty($_POST['species'])){
         return true;
@@ -69,7 +86,7 @@ if($_POST && checkPost()){
     $whereC = whereClause();
     $query = "SELECT * FROM NPCs WHERE $whereC ORDER BY ID";
     
-    echo $whereC;
+    //echo $whereC;
 
     if(!empty($_POST['species'])){
         $SpeciesID = $_POST['species'];
@@ -111,70 +128,70 @@ if($_POST && checkPost()){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
+    <?php include("headInfo.php");?>
     <title>Your NPC Database</title>
 </head>
 <body>
     <?php include("header.php");?>
     <main>
-        <div>
-            <form  id="searchForm" action="index.php" method="post">
-                <fieldset>
-                    <legend>Search Criteria</legend>
-                    <div>
-                        <label for="name">Name</label>
-                        <input name="name" id="name">
-                    </div>
-                    <div>
-                        <label for="species">Species</label>
-                        <select name="species" id="species">
-                            <option value="">Select a Species</option>
-                            <?php while($rowSpecies = $statementSpecies->fetch()):?>
-                                <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
-                            <?php endwhile ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="occupation">Occupation</label>
-                        <select name="occupation" id="occupation">
-                            <option value="">Select an Occupation</option>
-                            <?php while($rowOrganization = $statementOccupation->fetch()):?>
-                                <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
-                            <?php endwhile ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="organization">Organization</label>
-                        <select name="organization" id="organization">
-                            <option value="">Select an Organization</option>
-                            <?php while($rowOrganization = $statementOrganization->fetch()):?>
-                                <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
-                            <?php endwhile ?>
-                        </select>
-                    </div>
-                    <div id="buttonContainer">
-                        <input class="button" type="submit" name="command" value="Read">
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-        <div id="cardLibrary">
-            <?php while($row = $statement->fetch()):?>
-                <div class="characterCard">
-                    <div class="portrait">
-                        <?php if($row['imgsrc'] != "images/default.jpg"):  ?>
-                            <img class="portrait" src=<?=$row['imgsrc']?> alt="CharacterPortrait">
-                        <?php else: ?>
-                            <h3>No Portrait Assigned.</h3>
-                        <?php endif ?>
-                    </div>  
-                    <h2><?=$row['Name']?></h2>
-                    <a href="full.php?ID=<?=$row['ID']?>">Show Full Info</a> 
-                </div>               
-            <?php endwhile ?>
+        <div id="mainContainer">
+            <div>
+                <form  id="searchForm" action="index.php" method="post">
+                    <fieldset>
+                        <legend>Search Criteria</legend>
+                        <div>
+                            <label for="name">Name</label>
+                            <input name="name" id="name">
+                        </div>
+                        <div>
+                            <label for="species">Species</label>
+                            <select name="species" id="species">
+                                <option value="">Select a Species</option>
+                                <?php while($rowSpecies = $statementSpecies->fetch()):?>
+                                    <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="occupation">Occupation</label>
+                            <select name="occupation" id="occupation">
+                                <option value="">Select an Occupation</option>
+                                <?php while($rowOrganization = $statementOccupation->fetch()):?>
+                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="organization">Organization</label>
+                            <select name="organization" id="organization">
+                                <option value="">Select an Organization</option>
+                                <?php while($rowOrganization = $statementOrganization->fetch()):?>
+                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div id="buttonContainer">
+                            <input class="button" type="submit" name="command" value="Read">
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="cardLibrary">
+                <?php while($row = $statement->fetch()):?>
+                    <div class="characterCard">
+                        <a href="full.php?ID=<?=$row['ID']?>">    
+                            <div class="portrait">
+                                <?php if($row['imgsrc'] != "images/default.jpg"):  ?>
+                                    <img src=<?=$row['imgsrc']?> alt="CharacterPortrait">
+                                <?php else: ?>
+                                    <h3>No Portrait Assigned.</h3>
+                                <?php endif ?>
+                            </div>  
+                            <h2 class="charName"><?=$row['Name']?></h2>
+                        </a>
+                    </div>               
+                <?php endwhile ?>
+            </div>
         </div>
     </main>
 </body>
