@@ -22,7 +22,11 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && $_SESSION['justLogge
     $_SESSION['justLoggedIn'] = false;
 }
 
-if($_SESSION['justLoggedOut']){
+if(!isset($_SESSION['justLoggedOut'])){
+    $_SESSION['justLoggedOut'] = false;
+}
+
+if($_SESSION['justLoggedOut'] && isset($_SESSION['justLoggedOut'])){
     echo '<script type="text/javascript">
     window.onload = function () { alert("You logged out."); } 
  </script>'; 
