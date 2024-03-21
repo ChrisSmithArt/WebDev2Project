@@ -43,7 +43,7 @@
                     $SpeciesID = $_POST['species'];
                     $OccupationID = $_POST['occupation'];
                     $OrganizationID = $_POST['organization'];
-                    $query = "UPDATE npcs SET Name = :Name, Description = :Description, SpeciesID = :SpeciesID, OccupationID = :OccupationID, OrganizationID = :OrganizationID, imgsrc = :imgsrc  WHERE ID = :ID";
+                    $query = "UPDATE npcs SET Name = :Name, Description = :Description, SpeciesID = :SpeciesID, OccupationID = :OccupationID, OrganizationID = :OrganizationID, imgsrc = :imgsrc  WHERE npcID = :ID";
                     $statement = $db->prepare($query);
                     $statement->bindValue(':Name', $Name);        
                     $statement->bindValue(':Description', $Description);
@@ -53,35 +53,35 @@
                     $statement->bindValue(':imgsrc', checkImage() ? bindImage() : "images/default.jpg" );
                     $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
                     $statement->execute();
-                    header("Location: index.php");
+                    header("Location: content.php");
                 } else {
                     $valid = false;
                 }
             }else if ($_POST['command'] == 'Delete'){
                 $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT);
-                $query = "DELETE FROM npcs WHERE ID = :ID";
+                $query = "DELETE FROM npcs WHERE npcID = :ID";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
                 $statement->execute();
-                header("Location: index.php");
+                header("Location: content.php");
             }
         } else if (isset($_GET['ID'])) { 
-            $query = "SELECT * FROM npcs WHERE ID = :ID";
+            $query = "SELECT * FROM npcs WHERE npcID = :ID";
             $statement = $db->prepare($query);
             $statement->bindValue(':ID', $ID, PDO::PARAM_INT);
             $statement->execute();
             $npc = $statement->fetch();
         } 
 
-        $querySpecies = "SELECT * FROM species ORDER BY ID";
+        $querySpecies = "SELECT * FROM species ORDER BY speciesID";
         $statementSpecies = $db->prepare($querySpecies);
         $statementSpecies->execute();
     
-        $queryOrganization = "SELECT * FROM organizations ORDER BY ID";
+        $queryOrganization = "SELECT * FROM organizations ORDER BY organizationID";
         $statementOrganization = $db->prepare($queryOrganization);
         $statementOrganization->execute(); 
     
-        $queryOccupation = "SELECT * FROM occupations ORDER BY ID";
+        $queryOccupation = "SELECT * FROM occupations ORDER BY occupationID";
         $statementOccupation = $db->prepare($queryOccupation);
         $statementOccupation->execute(); 
 
@@ -89,7 +89,7 @@
 
 
     } else {
-        header("Location: index.php");
+        header("Location: content.php");
     }
 
 
@@ -194,7 +194,7 @@
                             <select name="species" id="species">
                                 <option value="">Select a Species</option>
                                 <?php while($rowSpecies = $statementSpecies->fetch()):?>
-                                    <option value="<?=$rowSpecies['ID']?>"  <?=$rowSpecies['ID'] == $npc['SpeciesID'] ? ' selected="selected"' : ''?>><?=$rowSpecies['Name']?></option>
+                                    <option value="<?=$rowSpecies['speciesID']?>"  <?=$rowSpecies['speciesID'] == $npc['SpeciesID'] ? ' selected="selected"' : ''?>><?=$rowSpecies['SpeciesName']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -203,7 +203,7 @@
                             <select name="occupation" id="occupation">
                                 <option value="">Select an Occupation</option>
                                 <?php while($rowOccupation = $statementOccupation->fetch()):?>
-                                    <option value="<?=$rowOccupation['ID']?>" <?=$rowOccupation['ID'] == $npc['OccupationID'] ? ' selected="selected"' : ''?>><?=$rowOccupation['Name']?> </option>
+                                    <option value="<?=$rowOccupation['occupationID']?>" <?=$rowOccupation['occupationID'] == $npc['OccupationID'] ? ' selected="selected"' : ''?>><?=$rowOccupation['OccupationName']?> </option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -212,7 +212,7 @@
                             <select name="organization" id="organization">
                                 <option value="">Select an Organization</option>
                                 <?php while($rowOrganization = $statementOrganization->fetch()):?>
-                                    <option value="<?=$rowOrganization['ID']?>"  <?=$rowOrganization['ID'] == $npc['OrganizationID'] ? ' selected="selected"' : ''?>><?=$rowOrganization['Name']?></option>
+                                    <option value="<?=$rowOrganization['organizationID']?>"  <?=$rowOrganization['organizationID'] == $npc['OrganizationID'] ? ' selected="selected"' : ''?>><?=$rowOrganization['OrganizationName']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -232,7 +232,7 @@
                     <?php if(!$valid):?>
                         Invalid: You cannot update an NPC with empty values!
                     <?php else: ?>
-                        <?php header("Location: index.php")?>
+                        <?php header("Location: content.php")?>
                     <?php endif ?>
                 </div>
                 <?php endif ?>

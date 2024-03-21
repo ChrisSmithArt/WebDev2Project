@@ -4,7 +4,9 @@ require('connect.php');
 session_start();
 
 
-
+if(!empty($_POST['password'])){
+  echo $_POST['password'];
+}
 
 $query = "SELECT * FROM users ORDER BY ID";
 $statement = $db->prepare($query);
@@ -25,6 +27,7 @@ if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
             }
             $_SESSION['loggedIn'] = true;
             $_SESSION['justLoggedIn'] = true;
+            // $_SESSION['userID'] = $row['ID'];
             header("location: index.php");
           }
         }
@@ -58,7 +61,7 @@ if(!isset($_SESSION['loggedIn']) && !isset($_SESSION['Admin'])){
                     </div>
                     <div>
                         <label for="password">Password</label>
-                        <input name="password" id="password">
+                        <input type="password" name="password" id="password">
                     </div>
                     <div id="buttonContainer">
                         <input class="button" type="submit" name="command" value="login">

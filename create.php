@@ -56,15 +56,15 @@ if($_POST && $_POST['command'] == 'Create'){
     }
 }
 
-    $querySpecies = "SELECT * FROM species ORDER BY ID";
+    $querySpecies = "SELECT * FROM species ORDER BY speciesID";
     $statementSpecies = $db->prepare($querySpecies);
     $statementSpecies->execute(); 
 
-    $queryOrganization = "SELECT * FROM organizations ORDER BY ID";
+    $queryOrganization = "SELECT * FROM organizations ORDER BY organizationID";
     $statementOrganization = $db->prepare($queryOrganization);
     $statementOrganization->execute(); 
 
-    $queryOccupation = "SELECT * FROM occupations ORDER BY ID";
+    $queryOccupation = "SELECT * FROM occupations ORDER BY occupationID";
     $statementOccupation = $db->prepare($queryOccupation);
     $statementOccupation->execute();
     
@@ -176,7 +176,7 @@ if($_POST && $_POST['command'] == 'Create'){
                             <select name="species" id="species">
                                 <option value="">Select a Species</option>
                                 <?php while($rowSpecies = $statementSpecies->fetch()):?>
-                                    <option value="<?=$rowSpecies['ID']?>"><?=$rowSpecies['Name']?></option>
+                                    <option value="<?=$rowSpecies['speciesID']?>"><?=$rowSpecies['SpeciesName']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -185,7 +185,7 @@ if($_POST && $_POST['command'] == 'Create'){
                             <select name="occupation" id="occupation">
                                 <option value="">Select an Occupation</option>
                                 <?php while($rowOccupation = $statementOccupation->fetch()):?>
-                                    <option value="<?=$rowOccupation['ID']?>"><?=$rowOccupation['Name']?></option>
+                                    <option value="<?=$rowOccupation['occupationID']?>"><?=$rowOccupation['OccupationName']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>
@@ -194,7 +194,7 @@ if($_POST && $_POST['command'] == 'Create'){
                             <select name="organization" id="organization">
                                 <option value="">Select an Organization</option>
                                 <?php while($rowOrganization = $statementOrganization->fetch()):?>
-                                    <option value="<?=$rowOrganization['ID']?>"><?=$rowOrganization['Name']?></option>
+                                    <option value="<?=$rowOrganization['organizationID']?>"><?=$rowOrganization['OrganizationName']?></option>
                                 <?php endwhile ?>
                             </select>
                         </div>

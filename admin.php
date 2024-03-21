@@ -120,7 +120,7 @@ if(!isset($_SESSION['loggedIn']) || !$_SESSION['loggedIn']){
     }
 
 //SPECIES
-$speciesQuery = "SELECT * FROM species ORDER BY ID";
+$speciesQuery = "SELECT * FROM species ORDER BY speciesID";
 $speciesStatement = $db->prepare($speciesQuery);
 $speciesStatement->execute(); 
 
@@ -137,7 +137,7 @@ if($_POST){
                 $speciesName  = filter_input(INPUT_POST, 'SpeciesName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $speciesDescription = filter_input(INPUT_POST, 'SpeciesDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $speciesID = filter_input(INPUT_POST, 'SpeciesID', FILTER_SANITIZE_NUMBER_INT);
-                $speciesQuery = "UPDATE species SET Name = :Name, Description = :Description WHERE ID = :ID";
+                $speciesQuery = "UPDATE species SET SpeciesName = :Name, SpeciesDescription = :Description WHERE speciesID = :ID";
                 $speciesStatement = $db->prepare($speciesQuery);
                 $speciesStatement->bindValue(':Name', $speciesName);        
                 $speciesStatement->bindValue(':Description', $speciesDescription);
@@ -161,7 +161,7 @@ $validSpecies = true;
 if ($_POST && !empty($_POST['NewSpeciesName']) && !empty($_POST['NewSpeciesDescription']) && $_POST['command'] == 'Create') {
     $nameSpecies = filter_input(INPUT_POST, 'NewSpeciesName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $descriptionSpecies = filter_input(INPUT_POST, 'NewSpeciesDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $querySpecies = "INSERT INTO species (Name, Description) VALUES (:Name, :Description)";        
+    $querySpecies = "INSERT INTO species (SpeciesName, SpeciesDescription) VALUES (:Name, :Description)";        
     $statementSpecies = $db->prepare($querySpecies);
     $statementSpecies->bindValue(':Name', $nameSpecies);
     $statementSpecies->bindValue(':Description', $descriptionSpecies);
@@ -173,7 +173,7 @@ if ($_POST && !empty($_POST['NewSpeciesName']) && !empty($_POST['NewSpeciesDescr
 }
 
 //ORGANIZATIONS
-$organizationQuery = "SELECT * FROM organizations ORDER BY ID";
+$organizationQuery = "SELECT * FROM organizations ORDER BY organizationID";
 $organizationStatement = $db->prepare($organizationQuery);
 $organizationStatement->execute();
 
@@ -192,7 +192,7 @@ if($_POST){
                 $organizationName  = filter_input(INPUT_POST, 'OrganizationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $organizationDescription = filter_input(INPUT_POST, 'OrganizationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $organizationID = filter_input(INPUT_POST, 'OrganizationID', FILTER_SANITIZE_NUMBER_INT);
-                $organizationQuery = "UPDATE organizations SET Name = :Name, Description = :Description WHERE ID = :ID";
+                $organizationQuery = "UPDATE organizations SET OrganizationName = :Name, OrganizationDescription = :Description WHERE organizationID = :ID";
                 $organizationStatement = $db->prepare($organizationQuery);
                 $organizationStatement->bindValue(':Name', $organizationName);        
                 $organizationStatement->bindValue(':Description', $organizationDescription);
@@ -205,7 +205,7 @@ if($_POST){
         }else if ($_POST['command'] == 'Delete'){
             // echo "<h2>ID: " . $_POST['OrganizationID']. "</h2>";
             $organizationID = filter_input(INPUT_POST, 'OrganizationID', FILTER_SANITIZE_NUMBER_INT);
-            $organizationQuery = "DELETE FROM organizations WHERE ID = :ID";
+            $organizationQuery = "DELETE FROM organizations WHERE organizationID = :ID";
             $organizationStatement = $db->prepare($organizationQuery);
             $organizationStatement->bindValue(':ID', $organizationID, PDO::PARAM_INT);
             $organizationStatement->execute();
@@ -216,7 +216,7 @@ $validOrganization = true;
 if ($_POST && !empty($_POST['NewOrganizationName']) && !empty($_POST['NewOrganizationDescription']) && $_POST['command'] == 'Create') {
     $nameOrganization = filter_input(INPUT_POST, 'NewOrganizationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $descriptionOrganization = filter_input(INPUT_POST, 'NewOrganizationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $queryOrganization = "INSERT INTO organizations (Name, Description) VALUES (:Name, :Description)";        
+    $queryOrganization = "INSERT INTO organizations (OrganizationName, OrganizationDescription) VALUES (:Name, :Description)";        
     $statementOrganization = $db->prepare($queryOrganization);
     $statementOrganization->bindValue(':Name', $nameOrganization);
     $statementOrganization->bindValue(':Description', $descriptionOrganization);
@@ -229,7 +229,7 @@ if ($_POST && !empty($_POST['NewOrganizationName']) && !empty($_POST['NewOrganiz
 
 
 //OCCUPATIONS
-$occupationQuery = "SELECT * FROM occupations ORDER BY ID";
+$occupationQuery = "SELECT * FROM occupations ORDER BY occupationID";
 $occupationStatement = $db->prepare($occupationQuery);
 $occupationStatement->execute();
 
@@ -248,7 +248,7 @@ if($_POST){
                 $occupationName  = filter_input(INPUT_POST, 'OccupationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $occupationDescription = filter_input(INPUT_POST, 'OccupationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $occupationID = filter_input(INPUT_POST, 'OccupationID', FILTER_SANITIZE_NUMBER_INT);
-                $occupationQuery = "UPDATE occupations SET Name = :Name, Description = :Description WHERE ID = :ID";
+                $occupationQuery = "UPDATE occupations SET OccupationName = :Name, OccupationDescription = :Description WHERE occupationID = :ID";
                 $occupationStatement = $db->prepare($occupationQuery);
                 $occupationStatement->bindValue(':Name', $occupationName);        
                 $occupationStatement->bindValue(':Description', $occupationDescription);
@@ -261,7 +261,7 @@ if($_POST){
         }else if ($_POST['command'] == 'Delete'){
             // echo "<h2>ID: " . $_POST['OccupationID']. "</h2>";
             $occupationID = filter_input(INPUT_POST, 'OccupationID', FILTER_SANITIZE_NUMBER_INT);
-            $occupationQuery = "DELETE FROM occupations WHERE ID = :ID";
+            $occupationQuery = "DELETE FROM occupations WHERE occupationID = :ID";
             $occupationStatement = $db->prepare($occupationQuery);
             $occupationStatement->bindValue(':ID', $occupationID, PDO::PARAM_INT);
             $occupationStatement->execute();
@@ -272,7 +272,7 @@ $validOccupation = true;
 if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupationDescription']) && $_POST['command'] == 'Create') {
     $nameOccupation = filter_input(INPUT_POST, 'NewOccupationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $descriptionOccupation = filter_input(INPUT_POST, 'NewOccupationDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $queryOccupation = "INSERT INTO occupations (Name, Description) VALUES (:Name, :Description)";        
+    $queryOccupation = "INSERT INTO occupations (OccupationName, OccupationDescription) VALUES (:Name, :Description)";        
     $statementOccupation = $db->prepare($queryOccupation);
     $statementOccupation->bindValue(':Name', $nameOccupation);
     $statementOccupation->bindValue(':Description', $descriptionOccupation);
@@ -337,15 +337,15 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                                 <legend>Edit Organization</legend>
                                 <div>
                                     <label for="OrganizationName">Name</label>
-                                    <input type="text" name="OrganizationName" id="OrganizationName" value="<?=$organizationRow['Name']?>">
+                                    <input type="text" name="OrganizationName" id="OrganizationName" value="<?=$organizationRow['OrganizationName']?>">
                                 </div>
                                 <div>
                                     <label for="OrganizationDescription">Description</label>
-                                    <textarea name="OrganizationDescription" id="OrganizationDescription"><?= $organizationRow['Description'] ?></textarea>
+                                    <textarea name="OrganizationDescription" id="OrganizationDescription"><?= $organizationRow['OrganizationDescription'] ?></textarea>
                                 </div>
                                 <div>
-                                    <h3>Organization ID: <?=$organizationRow['ID']?></h3>
-                                    <input type="hidden" name="OrganizationID" if="OrganizationID" value="<?=$organizationRow['ID']?>">
+                                    <h3>Organization ID: <?=$organizationRow['organizationID']?></h3>
+                                    <input type="hidden" name="OrganizationID" if="OrganizationID" value="<?=$organizationRow['organizationID']?>">
                                     <input class="button" type="submit" name="command" value="Update">
                                     <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Organization?')">
                                 </div>
@@ -395,15 +395,15 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                                 <legend>Edit Occupation</legend>
                                 <div>
                                     <label for="OccupationName">Name</label>
-                                    <input type="text" name="OccupationName" id="OccupationName" value="<?=$occupationRow['Name']?>">
+                                    <input type="text" name="OccupationName" id="OccupationName" value="<?=$occupationRow['OccupationName']?>">
                                 </div>
                                 <div>
                                     <label for="OccupationDescription">Description</label>
-                                    <textarea name="OccupationDescription" id="OccupationDescription"><?= $occupationRow['Description'] ?></textarea>
+                                    <textarea name="OccupationDescription" id="OccupationDescription"><?= $occupationRow['OccupationDescription'] ?></textarea>
                                 </div>
                                 <div>
-                                    <h3>Occupation ID: <?=$occupationRow['ID']?></h3>
-                                    <input type="hidden" name="OccupationID" if="OccupationID" value="<?=$occupationRow['ID']?>">
+                                    <h3>Occupation ID: <?=$occupationRow['occupationID']?></h3>
+                                    <input type="hidden" name="OccupationID" if="OccupationID" value="<?=$occupationRow['occupationID']?>">
                                     <input class="button" type="submit" name="command" value="Update">
                                     <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Occupation?')">
                                 </div>
@@ -454,15 +454,15 @@ if ($_POST && !empty($_POST['NewOccupationName']) && !empty($_POST['NewOccupatio
                                 <legend>Edit Species</legend>
                                 <div>
                                     <label for="SpeciesName">Name</label>
-                                    <input type="text" name="SpeciesName" id="SpeciesName" value="<?=$speciesRow['Name']?>">
+                                    <input type="text" name="SpeciesName" id="SpeciesName" value="<?=$speciesRow['SpeciesName']?>">
                                 </div>
                                 <div>
                                     <label for="SpeciesDescription">Description</label>
-                                    <textarea name="SpeciesDescription" id="SpeciesDescription"><?= $speciesRow['Description'] ?></textarea>
+                                    <textarea name="SpeciesDescription" id="SpeciesDescription"><?= $speciesRow['SpeciesDescription'] ?></textarea>
                                 </div>
                                 <div>
-                                    <h3>Species ID: <?=$speciesRow['ID']?></h3>
-                                    <input type="hidden" name="SpeciesID" if="SpeciesID" value="<?=$speciesRow['ID']?>">
+                                    <h3>Species ID: <?=$speciesRow['speciesID']?></h3>
+                                    <input type="hidden" name="SpeciesID" if="SpeciesID" value="<?=$speciesRow['speciesID']?>">
                                     <input class="button" type="submit" name="command" value="Update">
                                     <input class="button" type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this Species?')">
                                 </div>

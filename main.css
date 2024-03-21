@@ -1,107 +1,42 @@
-body{
-    font-family: "Roboto Condensed", sans-serif;
-    font-optical-sizing: auto;
-  font-weight: 800;
-  font-style: normal;
-  background-color: #0a0d22;
-  color: #f3ac00;
-  margin: auto;
-  padding: 0px;
-  text-align: center;
+.portrait {
+    width: 12em;
+    height: 12em;
+    margin: 1em;
+    border: 3px solid black;
+    border-radius: 0.5em;
+    text-align: center;
 }
 
-h2{
-    padding: 0.5em;
-    margin: auto;
+.portrait img{
+    width: 100%;
+    height: 100%;
+}
+
+.characterCard{
+    margin: 1em;
+    border: 3px solid black;
+    border-radius: 0.5em;
+    display: flex;
 }
 
 #mainContainer{
     display: flex;
+    justify-content: space-evenly;
 }
 
-.characterCard{
-    /* position: relative; */
-    border: 3px outset #c81922;
-    outline: 3px solid #f3ac00;
-    box-shadow: 0 0 0 10px #269baa;
-    margin: 1em;
-    padding: 1em;
-    border-radius: 1em;
-    width: 8em;
-    height: 12em;
-    background-color: #03a66b;
-    color: #0a0d22;
+#searchform{
+    width: 15%;
 }
 
 #cardLibrary{
-    border: 5px solid #269baa;
-    display: flex;
-    flex-wrap: wrap;
-    border-radius: 1em;
-    justify-content: space-evenly;
     width: 80%;
 }
 
-nav{
-    border: 5px solid #269baa;
-    margin: auto;
-    border-radius: 1em;
-}
-
-.charName {
-    /* display: none; */
-    margin: 0;
-    /* position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); */
-  }
-  
-/* .portrait:hover + .charName {
-    display: block;
-} */
-
-/* .characterCard:hover .portrait{
-    width: 12em;
-    height: 12em;
-} */
-
-fieldset{
-    border: 5px solid #269baa;
-}
-
 nav ul{
-    list-style: none;
     display: flex;
     justify-content: space-evenly;
 }
 
 #categoryLibrary{
     display: flex;
-}
-
-#searchForm fieldset{
-    margin: 10px;
-    padding: 10px;
-}
-
-.portrait{
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    margin: auto;
-    border: 3px outset #c81922;
-    outline: 3px solid #f3ac00;
-    box-shadow: 0 0 0 15px #0a0d22;
-    background-color: #0a0d22;
-    color: #f3ac00;
-}
-img{
-    width: 100%;
-    height: 100%;
-}
-
-a{
-    text-decoration: none;
-    color: #c81922;
 }

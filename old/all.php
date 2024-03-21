@@ -30,7 +30,6 @@ if($_POST){
     $sortValue = 'ID';
 }
 
-echo $sortValue;
 $query = "SELECT * FROM NPCs ORDER BY $sortValue";
 $statement = $db->prepare($query);
 $statement->execute(); 
